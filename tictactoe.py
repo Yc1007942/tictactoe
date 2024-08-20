@@ -5,31 +5,37 @@ O = "O"
 EMPTY = None
 
 def initial_state():
-    """
-    Returns starting state of the board.
-    """
+    
     return [[EMPTY, EMPTY, EMPTY],
             [EMPTY, EMPTY, EMPTY],
             [EMPTY, EMPTY, EMPTY]]
 
 def player(board):
-    """
-    Returns player who has the next turn on a board.
-    """
-    x_count = sum(row.count(X) for row in board)
-    o_count = sum(row.count(O) for row in board)
-    return X if x_count <= o_count else O
+    x_count=0
+    o_count=0
+    for i in range(3):
+        for j in range(3):
+            if board[i][j]==X:
+                x_count +=1
+            elif board[i][j]== O:
+                o_count +=1
+    if x_count <= o_count:
+        return X
+    else:
+        return O
 
 def actions(board):
-    """
-    Returns set of all possible actions (i, j) available on the board.
-    """
-    return {(i, j) for i in range(3) for j in range(3) if board[i][j] == EMPTY}
+
+    available_moves= set()
+    for i in range(3):
+        for j in range(3):
+            if board[i][j] == EMPTY:
+                available_moves.add((i,j))
+    return available_moves
+
 
 def result(board, action):
-    """
-    Returns the board that results from making move (i, j) on the board.
-    """
+    
     if board[action[0]][action[1]] != EMPTY:
         raise ValueError("Invalid action, spot already taken.")
 
@@ -38,9 +44,7 @@ def result(board, action):
     return new_board
 
 def winner(board):
-    """
-    Returns the winner of the game, if there is one.
-    """
+  
     lines = []
     lines.extend(board)
     lines.extend([[board[i][j] for i in range(3)] for j in range(3)])
@@ -53,21 +57,21 @@ def winner(board):
         if line == [O, O, O]:
             return O
     return None
-
 def terminal(board):
-    """
-    Returns True if game is over, False otherwise.
-    """
+    count=0
     if winner(board) is not None:
         return True
-    if all(EMPTY not in row for row in board):
+    for row in board:
+        if not EMPTY in row:
+            count+=1
+    if count ==3:
         return True
     return False
 
+
+
 def utility(board):
-    """
-    Returns 1 if X has won the game, -1 if O has won, 0 otherwise.
-    """
+ 
     if winner(board) == X:
         return 1
     if winner(board) == O:
@@ -75,9 +79,7 @@ def utility(board):
     return 0
 
 def minimax(board):
-    """
-    Returns the optimal action for the current player on the board.
-    """
+   
     if terminal(board):
         return None
 
