@@ -1,2 +1,2 @@
-pip instal pygame
-enter python runner.py in terminal
+#pip install pygame
+#enter python runner.py in terminal
